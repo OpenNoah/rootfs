@@ -30,14 +30,24 @@ jobs:
       - name: Archive
         run: |
           ./release.sh
-          echo "RELEASE=$(echo rootfs-*.tar.xz uImage-*.tar.xz)" >> $GITHUB_ENV
-      - name: Upload artifact
+          echo "RELEASE_ROOTFS=$(echo -e rootfs-*.tar.xz)" >> $GITHUB_ENV
+          echo "RELEASE_UIMAGE=$(echo -e uImage-*)" >> $GITHUB_ENV
+      - name: Upload artifact - rootfs
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.RELEASE }}
-          path: ${{ env.RELEASE }}
+          name: ${{ env.RELEASE_ROOTFS }}
+          path: ${{ env.RELEASE_ROOTFS }}
+          if-no-files-found: error
+      - name: Upload artifact - uImage
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RELEASE_UIMAGE }}
+          path: ${{ env.RELEASE_UIMAGE }}
+          if-no-files-found: error
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ env.RELEASE }}
+          files: |
+            ${{ env.RELEASE_ROOTFS }}
+            ${{ env.RELEASE_UIMAGE }}
