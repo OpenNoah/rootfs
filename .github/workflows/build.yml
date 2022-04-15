@@ -8,6 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Install packages
+        run: sudo apt install -y u-boot-tools
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Download toolchain
