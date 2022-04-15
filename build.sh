@@ -10,7 +10,7 @@ rm -rf build
 mkdir -p build
 cd build
 
-curl "$busybox_url" | tar jxvf -
+curl "$busybox_url" | tar jxf -
 ln -sfr busybox-* busybox
 cat $TOP/busybox_defconfig > busybox/.config
 
