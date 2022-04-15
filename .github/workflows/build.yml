@@ -14,9 +14,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Download toolchain
         run: |
-          wget "https://github.com/OpenNoah/toolchain/releases/download/v2139096/mipsel-linux-11.2.0-499e01a73161.tar.xz"
+          wget "https://github.com/OpenNoah/toolchain/releases/download/v758af2f/mipsel-linux-11.2.0-8f6af9284.tar.xz"
           tar axf mipsel-linux*.tar.xz
-          echo "TOOLCHAIN=$(realpath mipsel-linux)" >> $GITHUB_ENV
+          echo "TOOLCHAIN=$(realpath mipsel-linux*/)" >> $GITHUB_ENV
       - name: Build busybox rootfs
         run: PATH="$PATH:${{ env.TOOLCHAIN }}/bin" ./build.sh
       - name: Check out linux-new
