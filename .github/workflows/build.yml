@@ -13,7 +13,7 @@ jobs:
       - name: Download toolchain
         run: |
           wget "https://github.com/OpenNoah/toolchain/releases/download/v2139096/mipsel-linux-11.2.0-499e01a73161.tar.xz"
-          tar axvf mipsel-linux*.tar.xz
+          tar axf mipsel-linux*.tar.xz
           echo "TOOLCHAIN=$(realpath mipsel-linux)" >> $GITHUB_ENV
       - name: Build busybox rootfs
         run: PATH="$PATH:${{ env.TOOLCHAIN }}/bin" ./build.sh
@@ -29,7 +29,13 @@ jobs:
         run: |
           ./release.sh
           echo "RELEASE=$(echo rootfs-*.tar.xz uImage-*.tar.xz)" >> $GITHUB_ENV
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RELEASE }}
+          path: ${{ env.RELEASE }}
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: ${{ env.RELEASE }}
