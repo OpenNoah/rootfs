@@ -10,21 +10,20 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+      - name: Download toolchain
+        run: |
+          wget "https://github.com/OpenNoah/toolchain/releases/download/v2139096/mipsel-linux-11.2.0-499e01a73161.tar.xz"
+          tar axvf mipsel-linux*.tar.xz
+          echo "TOOLCHAIN=$(realpath mipsel-linux)" >> $GITHUB_ENV
+      - name: Build busybox rootfs
+        run: |
+          PATH="$PATH:${{ env.TOOLCHAIN }}/bin" ./build.sh
       - name: Check out linux-new
         uses: actions/checkout@v3
         with:
           repository: 'OpenNoah/linux-new'
           ref: 'np-5.17.3'
           path: 'linux'
-      - name: Download toolchain
-        run: |
-          curl -o mipsel-linux.zip "https://github.com/OpenNoah/toolchain/suites/6138258533/artifacts/214096464"
-          unzip mipsel-linux.zip
-          tar axvf mipsel-linux*.tar.xz
-          echo "TOOLCHAIN=$(realpath mipsel-linux)" >> $GITHUB_ENV
-      - name: Build busybox rootfs
-        run: |
-          PATH="$PATH:${{ env.TOOLCHAIN }}/bin" ./build.sh
       - name: Build linux
         run: DEFCONFIG=noah_np1380_defconfig ./kernel.sh
       - name: Archive
