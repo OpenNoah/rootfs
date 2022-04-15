@@ -16,8 +16,7 @@ jobs:
           tar axvf mipsel-linux*.tar.xz
           echo "TOOLCHAIN=$(realpath mipsel-linux)" >> $GITHUB_ENV
       - name: Build busybox rootfs
-        run: |
-          PATH="$PATH:${{ env.TOOLCHAIN }}/bin" ./build.sh
+        run: PATH="$PATH:${{ env.TOOLCHAIN }}/bin" ./build.sh
       - name: Check out linux-new
         uses: actions/checkout@v3
         with:
@@ -25,7 +24,7 @@ jobs:
           ref: 'np-5.17.3'
           path: 'linux'
       - name: Build linux
-        run: DEFCONFIG=noah_np1380_defconfig ./kernel.sh
+        run: PATH="$PATH:${{ env.TOOLCHAIN }}/bin" DEFCONFIG=noah_np1380_defconfig ./kernel.sh
       - name: Archive
         run: |
           ./release.sh
